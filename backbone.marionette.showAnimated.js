@@ -4,6 +4,7 @@
 
 _.extend(Marionette.Region.prototype, {
 
+    options: {},
     animationType: 'default',
 
     attachHtml: function (view) {
@@ -33,7 +34,9 @@ _.extend(Marionette.Region.prototype, {
                     self.el.appendChild(newView.el); //from the original attachHtml method
 
                     //animate in the new view
-                    TweenMax.to(newView.$el, 0.5, {rotationY: 0, ease: Power2.easeOut});
+                    TweenMax.to(newView.$el, 0.5, {rotationY: 0, ease: Power2.easeOut, onComplete:function() {
+                        oldView.trigger('animateOutDone');
+                    }});
                 }});
                 break;
 
@@ -56,7 +59,9 @@ _.extend(Marionette.Region.prototype, {
                     self.el.appendChild(newView.el); //from the original attachHtml method
 
                     //animate in the new view
-                    TweenMax.to(newView.$el, 0.5, {rotationY: 0, ease:Power2.easeOut});
+                    TweenMax.to(newView.$el, 0.5, {rotationY: 0, ease:Power2.easeOut, onComplete:function() {
+                        oldView.trigger('animateOutDone');                       
+                    }});
                 }});
                 break;
 
@@ -77,7 +82,9 @@ _.extend(Marionette.Region.prototype, {
                     self.el.appendChild(newView.el); //from the original attachHtml method
 
                     //animate in the new view
-                    TweenMax.to(newView.$el.children(), 0.5, {left:0, ease:Power2.easeInOut});
+                    TweenMax.to(newView.$el.children(), 0.5, {left:0, ease:Power2.easeInOut, onComplete:function() {
+                        oldView.trigger('animateOutDone');
+                    }});
                 }});
                 break;
 
@@ -98,12 +105,13 @@ _.extend(Marionette.Region.prototype, {
                     self.el.appendChild(newView.el); //from the original attachHtml method
 
                     //animate in the new view
-                    TweenMax.to(newView.$el.children(), 0.5, {left:0, ease:Power2.easeInOut});
+                    TweenMax.to(newView.$el.children(), 0.5, {left:0, ease:Power2.easeInOut, onComplete:function() {
+                        oldView.trigger('animateOutDone');
+                    }});
                 }});
                 break;
 
             default:
-                //console.log('region.show(): default');
                 this.el.innerHTML = '';
                 this.el.appendChild(view.el);
         }
@@ -115,6 +123,7 @@ _.extend(Marionette.Region.prototype, {
 
         options = options || {};
         this.animationType = options.animationType || 'default';
+        this.options = options;
         //options.preventDestroy = true;
 
         var oldView = this.currentView;
